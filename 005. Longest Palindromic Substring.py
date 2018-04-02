@@ -1,7 +1,8 @@
 """
-Given a string s, find the longest palindromic substring in s. You may assume that the maximum length of s is 1000.
-"""
 
+Given a string s, find the longest palindromic substring in s. You may assume that the maximum length of s is 1000.
+
+"""
 
 class Solution:
     def longestPalindrome(self, s):
@@ -18,37 +19,32 @@ class Solution:
         
         N = len(s)
         
-        for i in range(N):
-            # find the next character same as s[i]
-            j = s.rfind(s[i], i+1, N)
+        for i in range(0, N-1):
+            # find a palindrome with a center s[i]
+            start, end = i, i
+            max_ite = min(i, N-1-i)
+            ite = 0
             
-            # if found, start check
-            while j>=0 and j-i+1 > max_palin:  
-                if self.isPalindrome(s[i:j+1]) and j-i+1 >max_palin:
-                    max_palin = j-i+1
-                    result = s[i:j+1]
-                    break
+            while ite<=max_ite and s[i-ite]==s[i+ite]:
+                start, end = i-ite, i+ite
+                ite += 1
+            
+            if (end-start+1) > max_palin:
+                max_palin = end-start+1
+                result = s[start:end+1]
+            
+            # find a palindrom without a center
+            if s[i]==s[i+1]:
+                start, end = i, i+1
+                max_ite = min(i, N-2-i)
+                ite = 0
                 
-                # find next s[i]
-                j = s.rfind(s[i], i+1, j)
+                while ite<=max_ite and s[i-ite]==s[i+1+ite]:
+                    start, end = i-ite, i+ite+1
+                    ite += 1
                 
+                if (end-start+1) > max_palin:
+                    max_palin = end-start+1
+                    result = s[start:end+1]
+          
         return result
-        
-    def isPalindrome(self, string):
-        if not string:
-            return True
-        
-        if len(string)==1:
-            return True
-        
-        start, end = 0, len(string)-1
-        
-        while start<end:
-            if string[start]!=string[end]:
-                return False
-            start += 1
-            end -= 1
-        
-        return True
-        
-        
